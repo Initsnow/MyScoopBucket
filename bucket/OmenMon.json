@@ -14,6 +14,6 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/OmenMon/OmenMon/releases/download/$version/OmenMon-$version-Release.zip",
+        "url": "https://github.com/OmenMon/OmenMon/releases/download/$version/OmenMon-$version-Release.zip"
     }
 }
