@@ -14,7 +14,6 @@
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000010\" $backupPath -y",
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000070\" $backupPath -y",
       "# 设置新的注册表值",
-      "echo $dir\\disable-ctrl+space.reg",
       "reg import $dir\\disable-ctrl+space.reg"
     ]
   },
