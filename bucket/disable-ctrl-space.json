@@ -4,6 +4,7 @@
   "homepage": "https://github.com/Initsnow/MyScoopBucket",
   "license": "Unknown",
   "url": "https://raw.githubusercontent.com/Initsnow/MyScoopBucket/master/assets/disable-ctrl+space.reg",
+  "hash": "83967a9a154f326429e2830b40e66639418f23c125e4ae243f1c97b314bf3a1e",
   "installer": {
     "script": [
       "$backupPath = \"$dir\\registry_backup.reg\"",
@@ -13,7 +14,8 @@
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000010\" $backupPath -y",
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000070\" $backupPath -y",
       "# 设置新的注册表值",
-      "reg import $fname"
+      "echo $dir\\disable-ctrl+space.reg",
+      "reg import $dir\\disable-ctrl+space.reg"
     ]
   },
   "uninstaller": {
