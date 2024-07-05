@@ -1,6 +1,7 @@
 {
   "version": "20240705",
   "description": "禁用系统默认ctrl+space切换输入法快捷键",
+  "homepage": "https://github.com/Initsnow/MyScoopBucket",
   "license": "Unknown",
   "installer": {
     "script": [
