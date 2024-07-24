@@ -1,15 +1,15 @@
 {
     "description": "The sing-box Geoip with Geosite enhancement rules ported from https://github.com/Loyalsoldier/v2ray-rules-dat",
-    "version": "20240723003943",
+    "version": "20240724004025",
     "license": "Unknown",
     "url": [
-        "https://github.com/lyc8503/sing-box-rules/releases/download/20240723003943/geoip.db",
-        "https://github.com/lyc8503/sing-box-rules/releases/download/20240723003943/geosite.db"
+        "https://github.com/lyc8503/sing-box-rules/releases/download/20240724004025/geoip.db",
+        "https://github.com/lyc8503/sing-box-rules/releases/download/20240724004025/geosite.db"
     ],
     "homepage": "https://github.com/lyc8503/sing-box-rules",
     "hash": [
-        "bbd95917e9d77a871e4635f3810114569b6d4b4cc43375e749769e20d5f2b84b",
-        "ae791c4d3f9b131f54dc67f72a51b5d7355fd14094d6967bb991ee6ef1f47a28"
+        "31261eea5c10efa7bcd27fd03c3e9147ee811cb7f33b30caba6db2da679ba646",
+        "f44b9c0d85aaa9a8c9ef4c4ee41378cc786afa36d4b05342e9013487cb61caa8"
     ],
     "checkver": "github",
     "autoupdate": {
