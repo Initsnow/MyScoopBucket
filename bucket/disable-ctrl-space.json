@@ -3,7 +3,7 @@
   "description": "禁用系统默认ctrl+space切换输入法快捷键",
   "homepage": "https://github.com/Initsnow/MyScoopBucket",
   "license": "Unknown",
-  "url": "https://raw.githubusercontent.com/Initsnow/MyScoopBucket/master/assets/disable-ctrl+space.reg",
+  "url": "https://raw.githubusercontent.com/Initsnow/MyScoopBucket/master/scripts/disable-ctrl+space.reg",
   "hash": "83967a9a154f326429e2830b40e66639418f23c125e4ae243f1c97b314bf3a1e",
   "installer": {
     "script": [
