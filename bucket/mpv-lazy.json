@@ -5,7 +5,7 @@
     "license": "Unknown",
     "url": ["https://github.com/hooke007/MPV_lazy/releases/download/20240406/hooke007.mpv-lazy-20240406.exe#/mpv-lazy.7z","https://github.com/hooke007/MPV_lazy/releases/download/20240406/mpv-lazy-20240406-vsMega.7z"],
     "hash": ["48385c56659b8aa56fe2a372da3c5277e3a7fd671aaf2f7aa66dcfcc58274b4e","86002ed7c5faf3374f61020abda8a7d35982794e056544f5ac213b1a8e0c3ed1"],
-    "extract_dir": "mpv-lazy",
+    "extract_dir": ["mpv-lazy","mpv-lazy"],
     "bin": "mpv.exe",
     "post_install": "Start-Process -FilePath \"$dir\\installer\\mpv-install.bat\" -Verb RunAs",
     "pre_uninstall": "Start-Process -FilePath \"$dir\\installer\\mpv-uninstall.bat\" -Verb RunAs",
