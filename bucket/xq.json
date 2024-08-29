@@ -1,10 +1,10 @@
 {
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "Command-line XML and HTML beautifier and content extractor.",
     "homepage": "https://github.com/sibprogrammer/xq",
     "license": "MIT",
-    "url": "https://github.com/sibprogrammer/xq/releases/download/v1.2.4/xq_1.2.4_windows_amd64.zip",
-    "hash": "20882cfca256914bb4579b23170ac1d829d78d644b85abb8a841c15b0a321b13",
+    "url": "https://github.com/sibprogrammer/xq/releases/download/v1.2.5/xq_1.2.5_windows_amd64.zip",
+    "hash": "fb9b2fb908716e892260b5591788a75347dcfc52c856c7e52e388814bca8792e",
     "bin": "xq.exe",
     "checkver": "github",
     "autoupdate": {
