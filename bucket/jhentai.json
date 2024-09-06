@@ -12,6 +12,7 @@
       "JHenTai"
     ]
   ],
+  "persist": "data",
   "checkver": "github",
   "autoupdate": {
     "url": "https://github.com/jiangtian616/JHenTai/releases/download/v$version/JHenTai_$version_Windows.zip"
