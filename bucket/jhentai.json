@@ -6,6 +6,9 @@
   "url": "https://github.com/jiangtian616/JHenTai/releases/download/v8.0.1%2B257/JHenTai_8.0.1+257_Windows.zip",
   "hash": "CEDC346645AA6AA7C9115928AA5EEB21C67394C6C52A3265A0CAFF2CBFA16E36",
   "extract_dir": "JHenTai_8.0.1+257",
+  "bin": [
+    "jhentai.exe"
+  ],
   "shortcuts": [
     [
       "jhentai.exe",
