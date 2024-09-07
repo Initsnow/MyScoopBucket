@@ -14,7 +14,6 @@
       "Neothesia"
     ]
   ],
-  "persist": "settings.ron",
   "checkver": "github",
   "autoupdate": {
     "url": "https://github.com/PolyMeilex/Neothesia/releases/download/v$version/neothesia.exe"
