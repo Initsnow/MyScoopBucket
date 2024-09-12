@@ -1,10 +1,10 @@
 {
-    "version": "1.015",
+    "version": "1.016",
     "description": "A Chinese serif font derived from IPAmj Mincho. 一款衍生于「IPAmj明朝」的中文宋体字型。",
     "homepage": "https://github.com/lxgw/LxgwNeoZhiSong",
     "license": "IPA",
-    "url": "https://github.com/lxgw/LxgwNeoZhiSong/releases/download/v1.015/LXGWNeoZhiSong.ttf",
-    "hash": "EAEBF0DB4858817242EEB8861A959D1F2CC84AB0D7C81EE702172E9154DBC50E",
+    "url": "https://github.com/lxgw/LxgwNeoZhiSong/releases/download/v1.016/LXGWNeoZhiSong.ttf",
+    "hash": "589c7359a5e09ca2173ac702a9d2138063714c832a8f78f631cefd2ee7577c3a",
     "installer": {
         "script": [
             "$currentBuildNumber = [int] (Get-ItemProperty \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\").CurrentBuildNumber",
