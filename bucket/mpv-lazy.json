@@ -1,10 +1,10 @@
 {
-    "version": "20240406",
+    "version": "20240824",
     "description": "MPV 懒人包",
     "homepage": "https://github.com/hooke007/MPV_lazy",
     "license": "Unknown",
-    "url": ["https://github.com/hooke007/MPV_lazy/releases/download/20240406/hooke007.mpv-lazy-20240406.exe#/mpv-lazy.7z","https://github.com/hooke007/MPV_lazy/releases/download/20240406/mpv-lazy-20240406-vsMega.7z"],
-    "hash": ["48385c56659b8aa56fe2a372da3c5277e3a7fd671aaf2f7aa66dcfcc58274b4e","86002ed7c5faf3374f61020abda8a7d35982794e056544f5ac213b1a8e0c3ed1"],
+    "url": ["https://github.com/hooke007/MPV_lazy/releases/download/20240824/mpv-lazy-20240824.exe#/mpv-lazy.7z","https://github.com/hooke007/MPV_lazy/releases/download/20240824/mpv-lazy-20240824-vsNV.7z"],
+    "hash": ["A9BB67ACFF2AAC9A089DB61C9066337FB5F522FCECA1A56E8B49477098E92F54","39EE4EC7AB0A1399C173577039D4DA35D770C1222CBA5B66F48376EB8D6C12AC"],
     "extract_dir": ["mpv-lazy","mpv-lazy"],
     "bin": "mpv.exe",
     "post_install": "Start-Process -FilePath \"$dir\\installer\\mpv-install.bat\" -Verb RunAs",
@@ -17,6 +17,6 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": ["https://github.com/hooke007/MPV_lazy/releases/download/$version/hooke007.mpv-lazy-$version.exe#/mpv-lazy.7z","https://github.com/hooke007/MPV_lazy/releases/download/$version/mpv-lazy-$version-vsMega.7z"]
+        "url": ["https://github.com/hooke007/MPV_lazy/releases/download/$version/mpv-lazy-$version.exe#/mpv-lazy.7z","https://github.com/hooke007/MPV_lazy/releases/download/$version/mpv-lazy-$version-vsNV.7z"]
     }
 }
