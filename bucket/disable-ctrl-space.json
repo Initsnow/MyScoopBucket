@@ -7,25 +7,18 @@
   "hash": "83967a9a154f326429e2830b40e66639418f23c125e4ae243f1c97b314bf3a1e",
   "installer": {
     "script": [
-      "$backupPath = \"$dir\\registry_backup.reg\"",
       "# 备份注册表值",
-      "reg export \"HKCU\\Control Panel\\Input Method\\Hot Keys\\00000010\" $backupPath -y",
-      "reg export \"HKCU\\Control Panel\\Input Method\\Hot Keys\\00000070\" $backupPath -y",
-      "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000010\" $backupPath -y",
-      "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000070\" $backupPath -y",
+      "reg export \"HKCU\\Control Panel\\Input Method\\Hot Keys\\00000010\" \"$dir\\registry_backup0.reg\" -y",
+      "reg export \"HKCU\\Control Panel\\Input Method\\Hot Keys\\00000070\" \"$dir\\registry_backup1.reg\" -y",
+      "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000010\" \"$dir\\registry_backup2.reg\" -y",
+      "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000070\" \"$dir\\registry_backup3.reg\" -y",
       "# 设置新的注册表值",
-      "reg import $dir\\disable-ctrl+space.reg"
+      "Start-Process -FilePath \"reg\" -ArgumentList \"import $dir\\disable-ctrl+space.reg\" -Verb RunAs"
     ]
   },
   "uninstaller": {
     "script": [
-      "$backupPath = \"$dir\\registry_backup.reg\"",
-      "if (Test-Path $backupPath) {",
-      "reg import $backupPath",
-      "Write-Host \"注册表已恢复。\"",
-      "} else {",
-      "Write-Host \"备份文件不存在，无法恢复注册表。\"",
-      "}"
+      "Start-Process -FilePath \"powershell\" -ArgumentList \"reg import $dir\\registry_backup0.reg;reg import $dir\\registry_backup1.reg;reg import $dir\\registry_backup2.reg;reg import $dir\\registry_backup3.reg;\" -Verb RunAs"
     ]
   }
 }
