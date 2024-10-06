@@ -3,7 +3,7 @@
     "description": "It includes tools that interface with the Android platform, primarily adb and fastboot.",
     "homepage": "https://developer.android.com/tools/releases/platform-tools",
     "license": "Apache-2.0",
-    "url": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip",
+    "url": "https://dl.google.com/android/repository/platform-tools_r35.0.2-win.zip",
     "hash": "2975a3eac0b19182748d64195375ad056986561d994fffbdc64332a516300bb9",
     "extract_dir": "platform-tools",
     "bin": [
@@ -12,6 +12,6 @@
     ],
     "checkver": "<h2[^>]*>.*?</h2>\\s*<h4[^>]*data-text=\"([^\"]+?)\\s*\\([^\"]*\\)\"[^>]*>",
     "autoupdate": {
-        "url": "https://dl.google.com/android/repository/platform-tools-latest-windows.zip"
+        "url": "https://dl.google.com/android/repository/platform-tools_r$version-win.zip"
     }
 }
