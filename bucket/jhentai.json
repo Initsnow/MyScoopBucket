@@ -5,7 +5,7 @@
     "license": "Apache-2.0",
     "url": "https://github.com/jiangtian616/JHenTai/releases/download/v8.0.4+263/JHenTai_8.0.4+263_Windows.zip",
     "hash": "fbecd405ba7f7487f0202ab02020c7bc35ba8a16e88f90eff3e6589a2e22878a",
-    "extract_dir": "JHenTai_8.0.1+257",
+    "extract_dir": "JHenTai_8.0.4+263",
     "bin": "jhentai.exe",
     "shortcuts": [
         [
@@ -19,6 +19,7 @@
         "regex": "v(\\d+\\.\\d+\\.\\d+\\+\\d+)"
     },
     "autoupdate": {
-        "url": "https://github.com/jiangtian616/JHenTai/releases/download/v$version/JHenTai_$version_Windows.zip"
+        "url": "https://github.com/jiangtian616/JHenTai/releases/download/v$version/JHenTai_$version_Windows.zip",
+        "extract_dir": "JHenTai_$version"
     }
 }
