@@ -13,7 +13,6 @@
             "JHenTai"
         ]
     ],
-    "persist": "data",
     "checkver": {
         "url": "https://github.com/jiangtian616/JHenTai/releases/latest",
         "regex": "v(\\d+\\.\\d+\\.\\d+\\+\\d+)"
