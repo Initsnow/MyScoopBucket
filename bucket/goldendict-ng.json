@@ -22,7 +22,7 @@
         "regex": "v((?<short>.*)-Release.*)"
     },
     "autoupdate": {
-        "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v$version/GoldenDict-ng-$matchShort-Qt6.7.2.7z",
+        "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v$version/GoldenDict-ng-$matchShort-Qt6.7.2-Windows-installer.7z",
         "extract_dir": "GoldenDict-ng-$matchShort-Qt6.7.2"
     }
 }
