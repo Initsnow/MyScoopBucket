@@ -1,0 +1,21 @@
+{
+    "version": "1.2.0",
+    "description": "🦀 Prevents outdated Rust code suggestions from AI assistants. This MCP server fetches current crate docs, uses embeddings/LLMs, and provides accurate context via a tool call.",
+    "homepage": "https://github.com/Govcraft/rust-docs-mcp-server",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Govcraft/rust-docs-mcp-server/releases/download/v1.2.0/rustdocs_mcp_server-windows-x86_64.exe#/rustdocs_mcp_server.exe",
+            "hash": "a482e762e8fe30f96ac10bbec8c4c03265a57a28bbf05f6fa220176f0529b2fa"
+        }
+    },
+    "bin": "rustdocs_mcp_server.exe",
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Govcraft/rust-docs-mcp-server/releases/download/v$version/rustdocs_mcp_server-windows-x86_64.exe#/rustdocs_mcp_server.exe"
+            }
+        }
+    }
+}

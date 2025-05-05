@@ -17,8 +17,8 @@
         "content"
     ],
     "checkver": {
-        "url": "https://api.github.com/repositories/379450253/releases?per_page=1",
-        "jsonpath": "$[0].tag_name",
+        "url": "https://api.github.com/repos/xiaoyifang/goldendict-ng/releases/latest",
+        "jsonpath": "$.tag_name",
         "regex": "v((?<short>.*)-Release.*)"
     },
     "autoupdate": {
