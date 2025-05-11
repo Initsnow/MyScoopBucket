@@ -1,5 +1,5 @@
 {
-  "version": "20240705",
+  "version": "2025",
   "description": "禁用系统默认ctrl+space切换输入法快捷键",
   "homepage": "https://github.com/Initsnow/MyScoopBucket",
   "license": "Unknown",
@@ -13,12 +13,12 @@
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000010\" \"$dir\\registry_backup2.reg\" -y",
       "reg export \"HKU\\.DEFAULT\\Control Panel\\Input Method\\Hot Keys\\00000070\" \"$dir\\registry_backup3.reg\" -y",
       "# 设置新的注册表值",
-      "Start-Process -FilePath \"reg\" -ArgumentList \"import $dir\\disable-ctrl+space.reg\" -Verb RunAs"
+      "sudo reg import \"$dir\\disable-ctrl+space.reg\""
     ]
   },
   "uninstaller": {
     "script": [
-      "Start-Process -FilePath \"powershell\" -ArgumentList \"reg import $dir\\registry_backup0.reg;reg import $dir\\registry_backup1.reg;reg import $dir\\registry_backup2.reg;reg import $dir\\registry_backup3.reg;\" -Verb RunAs"
+      "sudo powershell -Command \"reg import \"$dir\\registry_backup0.reg\"; reg import \"$dir\\registry_backup1.reg\"; reg import \"$dir\\registry_backup2.reg\"; reg import \"$dir\\registry_backup3.reg\";\""
     ]
   }
 }
