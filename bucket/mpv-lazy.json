@@ -1,15 +1,15 @@
 {
-    "version": "20250405",
+    "version": "20250525",
     "description": "MPV 懒人包",
     "homepage": "https://github.com/hooke007/MPV_lazy",
     "license": "Unknown",
     "url": [
-        "https://github.com/hooke007/MPV_lazy/releases/download/20250405/mpv-lazy-20250405.exe#/mpv-lazy.7z",
-        "https://github.com/hooke007/MPV_lazy/releases/download/20250405/mpv-lazy-20250405-vsNV.7z"
+        "https://github.com/hooke007/MPV_lazy/releases/download/20250525/mpv-lazy-20250525.exe#/mpv-lazy.7z",
+        "https://github.com/hooke007/MPV_lazy/releases/download/20250525/mpv-lazy-20250525-vsNV.7z"
     ],
     "hash": [
-        "997c79f184e2c2a5d3d654fe860d11ec8fe7a8a8c0235f075c92b37129f61184",
-        "078f667dbcf13a13bd05b1dd935effbb987d07ace5aa666e90673f13bf4ee4d7"
+        "34e5840e26c0418d09f8cb4d947e772784a69d89060c7bfd2cee93dcc4524737",
+        "b94fecb90c937b7444b231cab5e653ff6e9678de2beb6bf38dd88a93e9ccede1"
     ],
     "extract_dir": [
         "mpv-lazy",
