@@ -1,11 +1,11 @@
 {
     "version": "20250809",
     "description": "MPV 懒人包",
-    "homepage": "https://github.com/hooke007/MPV_lazy",
+    "homepage": "https://github.com/hooke007/mpv_PlayKit",
     "license": "Unknown",
     "url": [
-        "https://github.com/hooke007/MPV_lazy/releases/download/20250809/mpv-lazy-20250809.exe#/mpv-lazy.7z",
-        "https://github.com/hooke007/MPV_lazy/releases/download/20250809/mpv-lazy-20250809-vsNV.7z"
+        "https://github.com/hooke007/mpv_PlayKit/releases/download/20250809/mpv-lazy-20250809.exe#/mpv-lazy.7z",
+        "https://github.com/hooke007/mpv_PlayKit/releases/download/20250809/mpv-lazy-20250809-vsNV.7z"
     ],
     "hash": [
         "aae41c9ac863f26a3038195ef1b6d89b83b58f41793e50730ddaf71629d2bcbf",
@@ -27,16 +27,16 @@
     "checkver": "github",
     "autoupdate": {
         "url": [
-            "https://github.com/hooke007/MPV_lazy/releases/download/$version/mpv-lazy-$version.exe#/mpv-lazy.7z",
-            "https://github.com/hooke007/MPV_lazy/releases/download/$version/mpv-lazy-$version-vsNV.7z"
+            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version.exe#/mpv-lazy.7z",
+            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z"
         ],
         "hash": [
             {
-                "url": "https://api.github.com/repos/hooke007/MPV_lazy/releases?per_page=1",
+                "url": "https://api.github.com/repos/hooke007/mpv_PlayKit/releases?per_page=1",
                 "find": "标准版本.*?`$sha256`"
             },
             {
-                "url": "https://api.github.com/repos/hooke007/MPV_lazy/releases?per_page=1",
+                "url": "https://api.github.com/repos/hooke007/mpv_PlayKit/releases?per_page=1",
                 "find": "vs与CUDA专用滤镜补丁包.*?`$sha256`"
             }
         ]

@@ -19,7 +19,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v$version/MusicLyricApp.v$version.pro.zip"
+                "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v$version/MusicLyricApp.v$version.win-x64.zip"
             }
         }
     }
