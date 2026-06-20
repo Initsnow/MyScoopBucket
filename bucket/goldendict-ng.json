@@ -1,11 +1,11 @@
 {
-    "version": "26.3.0-Release.fce2b872",
+    "version": "26.6.0",
     "description": "A feature-rich dictionary lookup program",
     "homepage": "https://github.com/xiaoyifang/goldendict",
     "license": "GPL-3.0-only",
-    "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v26.3.0-Release.fce2b872/GoldenDict-ng-26.3.0-Qt6.7.2-Windows-installer.7z",
-    "hash": "47030142809c199cdb8eca796563d36ca1a4827e3d04216544058882943deb59",
-    "extract_dir": "GoldenDict-ng-26.3.0-Qt6.7.2",
+    "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v26.6.0/GoldenDict-ng-26.6.0-Qt6.10.3-Windows.7z",
+    "hash": "8db2d0f5eef5555ab67e87a599034bc4c47d99e1d32e44c59d9a17d87be6b7f3",
+    "extract_dir": "GoldenDict-ng-26.6.0-Qt6.10.3",
     "shortcuts": [
         [
             "GoldenDict.exe",
@@ -18,11 +18,11 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/xiaoyifang/goldendict-ng/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "v((?<short>.*)-Release.*)"
+        "jsonpath": "$.assets[*].name",
+        "regex": "GoldenDict-ng-(?<version>[\\d.]+)-Qt(?<qt>[\\d.]+)-Windows\\.7z"
     },
     "autoupdate": {
-        "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v$version/GoldenDict-ng-$matchShort-Qt6.7.2-Windows-installer.7z",
-        "extract_dir": "GoldenDict-ng-$matchShort-Qt6.7.2"
+        "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v$version/GoldenDict-ng-$version-Qt$matchQt-Windows.7z",
+        "extract_dir": "GoldenDict-ng-$version-Qt$matchQt"
     }
 }

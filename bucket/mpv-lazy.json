@@ -1,15 +1,17 @@
 {
-    "version": "20251026",
+    "version": "20260510",
     "description": "MPV 懒人包",
     "homepage": "https://github.com/hooke007/mpv_PlayKit",
     "license": "Unknown",
     "url": [
-        "https://github.com/hooke007/mpv_PlayKit/releases/download/20251026/mpv-lazy-20251026.exe#/mpv-lazy.7z",
-        "https://github.com/hooke007/mpv_PlayKit/releases/download/20251026/mpv-lazy-20251026-vsNV.7z"
+        "https://github.com/hooke007/mpv_PlayKit/releases/download/20260510/mpv-lazy-20260510-noVS.7z",
+        "https://github.com/hooke007/mpv_PlayKit/releases/download/20260510/mpv-lazy-20260510-vsNV.7z.001",
+        "https://github.com/hooke007/mpv_PlayKit/releases/download/20260510/mpv-lazy-20260510-vsNV.7z.002"
     ],
     "hash": [
-        "a5b510d1808c6dd8bc2f7d7b464a1ddfc86a5c016a168d2cb39510ffdc6ad4cd",
-        "c1534afd89f8b865c844e34d2993a06b6fcb87ce73d1d8d42b42899e40afc4d9"
+        "cd8373316417ddf9a688d3f52aa47e1c67e863aef68cf5dba380c57f41b2c855",
+        "f877973fae54d7cc05451d0369340f5a4ef6c82a2f633c66b786a337d3e6ddda",
+        "1c7303d76f3767f16122c5ea16894add08b6c044ab15d2ccefba6155b8782007"
     ],
     "extract_dir": [
         "mpv-lazy",
@@ -27,17 +29,19 @@
     "checkver": "github",
     "autoupdate": {
         "url": [
-            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version.exe#/mpv-lazy.7z",
-            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z"
+            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-noVS.7z",
+            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z.001",
+            "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z.002"
         ],
         "hash": [
             {
-                "url": "https://api.github.com/repos/hooke007/mpv_PlayKit/releases?per_page=1",
-                "find": "标准版本.*?`$sha256`"
+                "mode": "github"
             },
             {
-                "url": "https://api.github.com/repos/hooke007/mpv_PlayKit/releases?per_page=1",
-                "find": "vs与CUDA专用滤镜补丁包.*?`$sha256`"
+                "mode": "github"
+            },
+            {
+                "mode": "github"
             }
         ]
     }

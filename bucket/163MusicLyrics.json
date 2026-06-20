@@ -1,12 +1,12 @@
 {
-    "version": "6.5",
+    "version": "7.3",
     "description": "NetEase cloud music lyrics downloader for Windows",
     "homepage": "https://github.com/jitwxs/163MusicLyrics",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v6.5/MusicLyricApp.v6.5.pro.zip",
-            "hash": "1F67C88486414F2EDEFE4D588A3F34054DE68E42A789BEAAF90DDEC375EF98F8"
+            "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v7.3/MusicLyricApp-v7.3-win-x64.zip",
+            "hash": "266af56b6d46f1caab6b5b6050a3295df8ed179a1eb447b0c47e8f173051edf2"
         }
     },
     "shortcuts": [
@@ -19,7 +19,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v$version/MusicLyricApp.v$version.win-x64.zip"
+                "url": "https://github.com/jitwxs/163MusicLyrics/releases/download/v$version/MusicLyricApp-v$version-win-x64.zip"
             }
         }
     }

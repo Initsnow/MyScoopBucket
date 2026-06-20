@@ -1,10 +1,10 @@
 {
-    "version": "0.2.2",
+    "version": "0.2.10",
     "description": "Command-line tool for switching and managing Codex accounts.",
     "homepage": "https://github.com/Loongphy/codex-auth",
     "license": "MIT",
-    "url": "https://github.com/Loongphy/codex-auth/releases/download/v0.2.2/codex-auth-Windows-X64.zip",
-    "hash": "3974e59cddfc36dd94158aefa2186092ebcb6f96fbedf45a6930cd1f23fd6342",
+    "url": "https://github.com/Loongphy/codex-auth/releases/download/v0.2.10/codex-auth-Windows-X64.zip",
+    "hash": "cdf2c4d9cc827c91c24eb4c032b9f6792f581b42808df5db167c39b255ea7108",
     "bin": [
         "codex-auth.exe",
         "codex-auth-auto.exe"
