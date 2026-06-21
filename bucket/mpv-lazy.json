@@ -18,8 +18,8 @@
         "mpv-lazy"
     ],
     "bin": "mpv.exe",
-    "post_install": "Start-Process -FilePath \"$dir\\installer\\mpv-install.bat\" -Verb RunAs",
-    "pre_uninstall": "Start-Process -FilePath \"$dir\\installer\\mpv-uninstall.bat\" -Verb RunAs",
+    "post_install": "& \"$dir\\mpv.com\" --config=no --register",
+    "pre_uninstall": "& \"$dir\\mpv.com\" --config=no --unregister",
     "shortcuts": [
         [
             "mpv.exe",
