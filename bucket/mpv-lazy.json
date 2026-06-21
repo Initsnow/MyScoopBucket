@@ -32,17 +32,6 @@
             "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-noVS.7z",
             "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z.001",
             "https://github.com/hooke007/mpv_PlayKit/releases/download/$version/mpv-lazy-$version-vsNV.7z.002"
-        ],
-        "hash": [
-            {
-                "mode": "github"
-            },
-            {
-                "mode": "github"
-            },
-            {
-                "mode": "github"
-            }
         ]
     }
 }
