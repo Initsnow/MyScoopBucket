@@ -1,0 +1,39 @@
+{
+    "version": "1.0.0",
+    "description": "禁用惠普笔记本遥测驱动与后台服务，并阻止Windows更新自动重新下载安装",
+    "homepage": "https://github.com/Initsnow/MyScoopBucket",
+    "license": "MIT",
+    "url": "https://raw.githubusercontent.com/Initsnow/MyScoopBucket/master/scripts/disable-hp-telemetry.ps1",
+    "hash": "ef9fa2c539a605adb557392ee531c61ca0db560748a2f22b4b04a567591f0815",
+    "bin": [
+        [
+            "disable-hp-telemetry.ps1",
+            "disable-hp-telemetry"
+        ]
+    ],
+    "installer": {
+        "script": [
+            "if (Get-Command sudo -ErrorAction SilentlyContinue) {",
+            "    sudo powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"$dir\\disable-hp-telemetry.ps1\" -Install -DataDir \"$persist_dir\"",
+            "} else {",
+            "    Start-Process powershell.exe -Verb RunAs -Wait -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -File `\"$dir\\disable-hp-telemetry.ps1`\" -Install -DataDir `\"$persist_dir`\"\"",
+            "}"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "if (Get-Command sudo -ErrorAction SilentlyContinue) {",
+            "    sudo powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"$dir\\disable-hp-telemetry.ps1\" -Uninstall -DataDir \"$persist_dir\"",
+            "} else {",
+            "    Start-Process powershell.exe -Verb RunAs -Wait -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -File `\"$dir\\disable-hp-telemetry.ps1`\" -Uninstall -DataDir `\"$persist_dir`\"\"",
+            "}"
+        ]
+    },
+    "persist": "data",
+    "notes": [
+        "已配置设备硬件阻止策略(DenyDeviceIDs)，阻止Windows更新重新安装惠普遥测驱动与组件。",
+        "已停止并禁用相关遥测服务及守护任务，并配置hosts黑名单屏蔽数据上传通道。",
+        "若笔记本BIOS中存在 'HP Application Driver' 选项，也可在BIOS中将其关闭以进一步隐藏底层ACPI接口。",
+        "可随时在终端运行 'disable-hp-telemetry -Status' 查看遥测阻止状态。"
+    ]
+}
