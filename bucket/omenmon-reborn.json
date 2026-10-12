@@ -1,0 +1,29 @@
+{
+    "version": "1.5.0",
+    "description": "Monitor temperature, control fan speeds, backlight color and more using WMI BIOS and the Embedded Controller. (Active fork of OmenMon)",
+    "homepage": "https://github.com/seakyy/OmenMon-Reborn",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/seakyy/OmenMon-Reborn/releases/download/v1.5.0/OmenMon-v1.5.0-Release.zip",
+    "hash": "4e0c9a9b004e63f55b88dc815c6e04586eb06edc27070e2cc894f0e2a9250b02",
+    "bin": [
+        "OmenMon.exe",
+        [
+            "OmenMon.exe",
+            "omenmon-reborn"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "OmenMon.exe",
+            "OmenMon"
+        ]
+    ],
+    "persist": "OmenMon.xml",
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/seakyy/OmenMon-Reborn/releases/download/v$version/OmenMon-v$version-Release.zip",
+        "hash": {
+            "url": "$baseurl/SHA256SUMS.txt"
+        }
+    }
+}
