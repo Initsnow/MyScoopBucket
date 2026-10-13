@@ -1,0 +1,30 @@
+{
+    "version": "1.18.1",
+    "description": "Language Server Protocol for Slint design markup language",
+    "homepage": "https://slint.dev",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/slint-ui/slint/releases/download/v1.18.1/slint-lsp-windows-x86_64.zip",
+            "hash": "4dc30c4b2024c5676092c647cb7471a1419a843fae46e632b50b68e2732fa912"
+        },
+        "arm64": {
+            "url": "https://github.com/slint-ui/slint/releases/download/v1.18.1/slint-lsp-windows-arm64.zip",
+            "hash": "60bc5840c4c943c1dd0ddfc3767a05fa5c9284ad7b8199f56545cd17ebb2ccef"
+        }
+    },
+    "bin": "slint-lsp.exe",
+    "checkver": {
+        "github": "https://github.com/slint-ui/slint"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/slint-ui/slint/releases/download/v$version/slint-lsp-windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/slint-ui/slint/releases/download/v$version/slint-lsp-windows-arm64.zip"
+            }
+        }
+    }
+}
