@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     禁用惠普笔记本遥测服务与驱动，并阻止Windows更新自动重新下载安装。
 .DESCRIPTION
