@@ -1,14 +1,17 @@
 <#
 .SYNOPSIS
-    禁用惠普笔记本遥测服务与驱动，并阻止Windows更新自动重新下载安装。
+    Disable HP laptop telemetry services and drivers, and prevent Windows Update from reinstalling them.
 .DESCRIPTION
-    1. 配置系统设备安装限制策略 (Device Installation Restrictions / DenyDeviceIDs)，阻止Windows Update及即插即用子系统自动重新下载、安装惠普遥测驱动与软件组件 (SWC\HPAnalytics, SWC\HPA000C, SWC\HPTPSH000C 等)。
-    2. 禁用并停止惠普遥测与分析服务 (HP Insights / Touchpoint Analytics, HP Services Scan, HP Network HSA 等)，保留暗影精灵(OMEN)专属硬件控制服务与键盘功能键。
-    3. 禁用设备管理器中现存的遥测软件组件设备，并清理驱动存储区 (DriverStore) 中的对应 OEM 驱动包。
-    4. 禁用计划任务中惠普遥测与数据收集任务。
-    5. 修改 hosts 屏蔽惠普遥测与收集端点 (hpanalytics.net, hpdaas.com)。
-    6. 注册系统事件与登录触发的守卫任务 (Guardian)，持续监控并防范第三方更新或系统升级复活遥测。
-    7. 支持完整卸载并还原系统原始状态与备份配置。
+    1. Configure Device Installation Restrictions (DenyDeviceIDs) to block Windows Update and Plug and Play from
+       reinstalling HP telemetry drivers and software components (SWC\HPAnalytics, SWC\HPA000C, SWC\HPTPSH000C, etc.).
+    2. Disable HP telemetry and analytics services (HP Insights, Touchpoint Analytics, HP Services Scan, HP Network HSA,
+       etc.) while preserving OMEN hardware control services and keyboard function keys.
+    3. Disable existing telemetry software component devices and remove their OEM driver packages from DriverStore.
+    4. Disable HP telemetry and data collection scheduled tasks.
+    5. Block HP telemetry endpoints (hpanalytics.net and hpdaas.com) through the hosts file.
+    6. Register a logon and event triggered guardian task to prevent telemetry from being restored by third-party updates
+       or operating system upgrades.
+    7. Support complete uninstall and restoration of the original system state and backup configuration.
 #>
 
 [CmdletBinding()]
@@ -31,13 +34,13 @@ param(
 
 $ErrorActionPreference = 'Continue'
 
-# 默认数据存储目录
+# Default data directory.
 if (-not $DataDir) {
     $DataDir = Join-Path $PSScriptRoot "data"
 }
 $BackupFile = Join-Path $DataDir "backup_state.json"
 
-# 需要在设备安装限制策略中屏蔽的遥测硬件ID (Device / Hardware IDs)
+# Telemetry hardware IDs to block through Device Installation Restrictions.
 $TargetHardwareIDs = @(
     'SWC\HPAnalytics',
     'SWC\HPA000C',
@@ -51,7 +54,7 @@ $TargetHardwareIDs = @(
     'SWC\HPSysInfoCap'
 )
 
-# 目标遥测服务名称 (Explicitly excludes HPOmenCap 以保证 OMEN 控制中心灯光/风扇正常)
+# Target telemetry service names. HPOmenCap is explicitly excluded so OMEN lighting and fan controls keep working.
 $TargetServiceNames = @(
     'HpTouchpointAnalyticsService',
     'TouchpointAnalyticsClientService',
@@ -71,7 +74,7 @@ $TargetServiceNames = @(
     'CaslAndWin10SessionFramework'
 )
 
-# 目标驱动 INF 原始文件名
+# Original INF file names for the target drivers.
 $TargetInfNames = @(
     'hpanalyticscomp.inf',
     'hpsvcsscancomp.inf',
@@ -79,7 +82,7 @@ $TargetInfNames = @(
     'hptpsmarthealthcomp.inf'
 )
 
-# 目标计划任务名称与关键字
+# Target scheduled task names and keywords.
 $TargetTaskKeywords = @(
     'HP Support Solutions Framework Report',
     'Consent Manager Launcher',
@@ -90,7 +93,7 @@ $TargetTaskKeywords = @(
     'HPAudioAnalytics'
 )
 
-# 屏蔽的遥测域名
+# Blocked telemetry domains.
 $BlockedDomains = @(
     'downloads.hpanalytics.net',
     'us-west-2.kinesis.hpanalytics.net',
@@ -112,7 +115,7 @@ function Test-IsAdmin {
 
 function Assert-Elevated {
     if (-not (Test-IsAdmin)) {
-        Write-Host "检测到当前未具备管理员权限，正在请求提升权限..." -ForegroundColor Cyan
+        Write-Host "Administrator privileges are required. Requesting elevation..." -ForegroundColor Cyan
         $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"")
         if ($Install) { $argList += '-Install' }
         elseif ($Uninstall) { $argList += '-Uninstall' }
@@ -124,7 +127,7 @@ function Assert-Elevated {
             $p = Start-Process powershell.exe -Verb RunAs -ArgumentList ($argList -join ' ') -PassThru -Wait
             exit $p.ExitCode
         } catch {
-            Write-Error "提升权限失败: $_"
+            Write-Error "Failed to elevate privileges: $_"
             exit 1
         }
     }
@@ -137,17 +140,17 @@ function Ensure-Directory([string]$Path) {
 }
 
 # -------------------------------------------------------------
-# 核心逻辑: 安装并配置遥测阻止策略
+# Core logic: install and configure telemetry blocking policies.
 # -------------------------------------------------------------
 function Invoke-Install {
     Assert-Elevated
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host " 开始配置惠普笔记本遥测禁用与 Windows Update 自动重装阻断" -ForegroundColor Green
+    Write-Host " Configuring HP telemetry blocking and Windows Update reinstall prevention" -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
 
     Ensure-Directory $DataDir
 
-    # 1. 备份当前系统状态 (若尚未备份)
+    # 1. Back up the current system state if no backup exists yet.
     $backup = @{}
     if (Test-Path $BackupFile) {
         try {
@@ -158,11 +161,11 @@ function Invoke-Install {
     }
 
     if (-not $backup.ContainsKey('CreatedTime')) {
-        Write-Host "[1/7] 正在备份系统当前策略与服务配置..." -ForegroundColor Yellow
+        Write-Host "[1/7] Backing up current policies and service configuration..." -ForegroundColor Yellow
         $backup['CreatedTime'] = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
         $backup['Registry'] = @{}
 
-        # 备份 DeviceInstall\Restrictions
+        # Back up DeviceInstall\Restrictions.
         $restrPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
         $backup['Registry']['RestrictionsExisted'] = (Test-Path $restrPath)
         if (Test-Path $restrPath) {
@@ -170,7 +173,7 @@ function Invoke-Install {
             $backup['Registry']['DenyDeviceIDsRetroactive'] = (Get-ItemProperty $restrPath -Name 'DenyDeviceIDsRetroactive' -ErrorAction SilentlyContinue).DenyDeviceIDsRetroactive
         }
 
-        # 备份现有 DenyDeviceIDs 列表
+        # Back up the existing DenyDeviceIDs list.
         $denySubPath = "$restrPath\DenyDeviceIDs"
         $backup['Registry']['ExistingDenyList'] = @{}
         if (Test-Path $denySubPath) {
@@ -182,14 +185,14 @@ function Invoke-Install {
             }
         }
 
-        # 备份 WindowsUpdate 驱动排除策略
+        # Back up the Windows Update driver exclusion policy.
         $wuPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
         $backup['Registry']['WUExisted'] = (Test-Path $wuPath)
         if (Test-Path $wuPath) {
             $backup['Registry']['ExcludeWUDriversInQualityUpdate'] = (Get-ItemProperty $wuPath -Name 'ExcludeWUDriversInQualityUpdate' -ErrorAction SilentlyContinue).ExcludeWUDriversInQualityUpdate
         }
 
-        # 备份目标服务的原始启动类型
+        # Back up the original startup type of each target service.
         $backup['Services'] = @{}
         foreach ($svcName in $TargetServiceNames) {
             $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
@@ -199,13 +202,13 @@ function Invoke-Install {
         }
 
         $backup | ConvertTo-Json -Depth 5 | Set-Content -Path $BackupFile -Encoding UTF8
-        Write-Host "      备份已保存至: $BackupFile" -ForegroundColor Gray
+        Write-Host "      Backup saved to: $BackupFile" -ForegroundColor Gray
     } else {
-        Write-Host "[1/7] 检测到已有备份，跳过覆盖以保留原始状态。" -ForegroundColor Gray
+        Write-Host "[1/7] Existing backup found. Keeping it to preserve the original state." -ForegroundColor Gray
     }
 
-    # 2. 配置设备安装阻止策略 (DenyDeviceIDs) 阻止 Windows Update 安装遥测驱动
-    Write-Host "[2/7] 配置设备硬件阻止策略 (DenyDeviceIDs)，阻止Windows Update下载安装遥测驱动..." -ForegroundColor Yellow
+    # 2. Configure DenyDeviceIDs to block Windows Update from installing telemetry drivers.
+    Write-Host "[2/7] Configuring DenyDeviceIDs to block Windows Update from installing telemetry drivers..." -ForegroundColor Yellow
     $restrPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
     if (-not (Test-Path $restrPath)) {
         New-Item -Path $restrPath -Force | Out-Null
@@ -218,7 +221,7 @@ function Invoke-Install {
         New-Item -Path $denySubPath -Force | Out-Null
     }
 
-    # 读取当前已有项，找到最大数值编号
+    # Read existing entries and find the highest numeric index.
     $denyProps = Get-ItemProperty $denySubPath
     $existingValues = @()
     $existingIndexes = @()
@@ -247,10 +250,10 @@ function Invoke-Install {
             $nextIndex++
         }
     }
-    Write-Host "      已在系统硬件阻止列表中加入 $($TargetHardwareIDs.Count) 个惠普遥测硬件ID。" -ForegroundColor Gray
+    Write-Host "      Added $($TargetHardwareIDs.Count) HP telemetry hardware IDs to the system block list." -ForegroundColor Gray
 
-    # 3. 禁用设备管理器中的遥测软件组件设备 (PnP Devices)
-    Write-Host "[3/7] 扫描并禁用设备管理器中的遥测软件组件设备..." -ForegroundColor Yellow
+    # 3. Disable telemetry software component devices in Device Manager.
+    Write-Host "[3/7] Scanning and disabling telemetry software component devices..." -ForegroundColor Yellow
     $pnpDevices = Get-PnpDevice -ErrorAction SilentlyContinue | Where-Object {
         $matched = $false
         $hwList = $_.HardwareID
@@ -269,15 +272,15 @@ function Invoke-Install {
 
     if ($pnpDevices) {
         foreach ($dev in $pnpDevices) {
-            Write-Host "      禁用设备: $($dev.FriendlyName) [$($dev.InstanceId)]" -ForegroundColor Gray
+            Write-Host "      Disabling device: $($dev.FriendlyName) [$($dev.InstanceId)]" -ForegroundColor Gray
             Disable-PnpDevice -InstanceId $dev.InstanceId -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
         }
     } else {
-        Write-Host "      未发现当前活跃的遥测软件组件设备。" -ForegroundColor Gray
+        Write-Host "      No active telemetry software component devices were found." -ForegroundColor Gray
     }
 
-    # 4. 清理本地驱动存储区 (DriverStore) 中的 OEM 遥测驱动
-    Write-Host "[4/7] 清理 DriverStore 驱动存储区中的惠普遥测 OEM 驱动包..." -ForegroundColor Yellow
+    # 4. Remove OEM telemetry drivers from the local DriverStore.
+    Write-Host "[4/7] Removing HP telemetry OEM driver packages from DriverStore..." -ForegroundColor Yellow
     try {
         $enumOutput = & pnputil.exe /enum-drivers
         $currentOem = ""
@@ -300,27 +303,27 @@ function Invoke-Install {
         }
 
         foreach ($item in $toDelete) {
-            Write-Host "      正在卸载并删除驱动包: $($item.Oem) (原名: $($item.Original))..." -ForegroundColor Gray
+            Write-Host "      Uninstalling and deleting driver package: $($item.Oem) (original: $($item.Original))..." -ForegroundColor Gray
             & pnputil.exe /delete-driver $item.Oem /uninstall /force | Out-Null
         }
         if ($toDelete.Count -eq 0) {
-            Write-Host "      本地 DriverStore 中未发现残留的遥测驱动包。" -ForegroundColor Gray
+            Write-Host "      No telemetry driver packages remain in the local DriverStore." -ForegroundColor Gray
         }
     } catch {
-        Write-Warning "检查/删除 OEM 驱动包时发生非致命错误: $_"
+        Write-Warning "A non-fatal error occurred while checking or deleting OEM driver packages: $_"
     }
 
-    # 5. 停止并禁用所有遥测后台服务
-    Write-Host "[5/7] 停止并彻底禁用惠普遥测后台服务..." -ForegroundColor Yellow
+    # 5. Stop and disable all telemetry background services.
+    Write-Host "[5/7] Stopping and disabling HP telemetry background services..." -ForegroundColor Yellow
     foreach ($svcName in $TargetServiceNames) {
         $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
         if ($svc) {
-            Write-Host "      处理服务: $svcName ($($svc.DisplayName))" -ForegroundColor Gray
+            Write-Host "      Processing service: $svcName ($($svc.DisplayName))" -ForegroundColor Gray
             if ($svc.Status -eq 'Running') {
                 Stop-Service -Name $svcName -Force -ErrorAction SilentlyContinue
             }
             Set-Service -Name $svcName -StartupType Disabled -ErrorAction SilentlyContinue
-            # 锁定注册表 Start=4 (Disabled)
+            # Lock the registry Start value to 4 (Disabled).
             $regSvcPath = "HKLM:\SYSTEM\CurrentControlSet\Services\$svcName"
             if (Test-Path $regSvcPath) {
                 Set-ItemProperty -Path $regSvcPath -Name "Start" -Value 4 -Type DWord -Force -ErrorAction SilentlyContinue
@@ -328,8 +331,8 @@ function Invoke-Install {
         }
     }
 
-    # 6. 禁用计划任务中惠普遥测/扫描/报告任务
-    Write-Host "[6/7] 禁用系统计划任务中的惠普遥测与上报任务..." -ForegroundColor Yellow
+    # 6. Disable HP telemetry, scan, and report scheduled tasks.
+    Write-Host "[6/7] Disabling HP telemetry and reporting scheduled tasks..." -ForegroundColor Yellow
     try {
         $allTasks = Get-ScheduledTask -ErrorAction SilentlyContinue
         foreach ($t in $allTasks) {
@@ -343,16 +346,16 @@ function Invoke-Install {
                 }
             }
             if ($matchTask -and $t.State -ne 'Disabled') {
-                Write-Host "      禁用任务: $($t.TaskPath)$($t.TaskName)" -ForegroundColor Gray
+                Write-Host "      Disabling task: $($t.TaskPath)$($t.TaskName)" -ForegroundColor Gray
                 $t | Disable-ScheduledTask -ErrorAction SilentlyContinue | Out-Null
             }
         }
     } catch {
-        Write-Warning "处理计划任务时发生错误: $_"
+        Write-Warning "An error occurred while processing scheduled tasks: $_"
     }
 
-    # 7. 配置 hosts 屏蔽遥测数据上传端点
-    Write-Host "[7/7] 配置 hosts 黑名单屏蔽遥测收集域名..." -ForegroundColor Yellow
+    # 7. Configure the hosts file to block telemetry upload endpoints.
+    Write-Host "[7/7] Configuring hosts file blocks for telemetry collection domains..." -ForegroundColor Yellow
     if (Test-Path $HostsPath) {
         $hostsContent = Get-Content -Path $HostsPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
         if (-not $hostsContent) { $hostsContent = "" }
@@ -364,24 +367,24 @@ function Invoke-Install {
             }
             $sb.AppendLine("# [Scoop:disable-hp-telemetry end]") | Out-Null
             Add-Content -Path $HostsPath -Value $sb.ToString() -Encoding UTF8 -Force
-            Write-Host "      已将遥测域名写入 hosts 文件。" -ForegroundColor Gray
+            Write-Host "      Telemetry domains were added to the hosts file." -ForegroundColor Gray
         } else {
-            Write-Host "      hosts 规则已存在，跳过添加。" -ForegroundColor Gray
+            Write-Host "      hosts rules already exist. Skipping." -ForegroundColor Gray
         }
     }
 
-    # 8. 注册系统持久化守卫任务 (Guardian Task)
+    # 8. Register the persistent guardian task.
     Install-GuardianTask
 
-    Write-Host "`n惠普遥测驱动与服务已成功禁用，并已启用驱动安装阻止策略！" -ForegroundColor Green
-    Write-Host "Windows Update 将被底层策略禁止重新下载与安装任何被屏蔽的遥测驱动。" -ForegroundColor Green
+    Write-Host "`nHP telemetry drivers and services were disabled successfully, and driver installation blocking is active." -ForegroundColor Green
+    Write-Host "Windows Update is blocked by policy from reinstalling any blocked telemetry driver." -ForegroundColor Green
 }
 
 # -------------------------------------------------------------
-# 注册/更新 Guardian 任务
+# Register or update the guardian task.
 # -------------------------------------------------------------
 function Install-GuardianTask {
-    Write-Host "正在注册系统持久化守卫计划任务 ($GuardianTaskPath$GuardianTaskName)..." -ForegroundColor Yellow
+    Write-Host "Registering persistent guardian scheduled task ($GuardianTaskPath$GuardianTaskName)..." -ForegroundColor Yellow
     $scriptPath = $PSCommandPath
     if (-not (Test-Path $scriptPath)) {
         $scriptPath = "$PSScriptRoot\disable-hp-telemetry.ps1"
@@ -441,19 +444,19 @@ function Install-GuardianTask {
     [IO.File]::WriteAllText($tmpXml, $xmlDefinition, [Text.Encoding]::Unicode)
     try {
         & schtasks.exe /create /tn "$GuardianTaskPath$GuardianTaskName" /xml "$tmpXml" /f | Out-Null
-        Write-Host "      守卫任务注册成功。" -ForegroundColor Gray
+        Write-Host "      Guardian task registered successfully." -ForegroundColor Gray
     } catch {
-        Write-Warning "注册守卫任务失败: $_"
+        Write-Warning "Failed to register the guardian task: $_"
     } finally {
         Remove-Item -Path $tmpXml -Force -ErrorAction SilentlyContinue
     }
 }
 
 # -------------------------------------------------------------
-# Guardian 守卫例程 (轻量静默运行)
+# Guardian routine (lightweight and silent).
 # -------------------------------------------------------------
 function Invoke-Guardian {
-    # 1. 确保服务保持停止与禁用
+    # 1. Keep services stopped and disabled.
     foreach ($svcName in $TargetServiceNames) {
         $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
         if ($svc) {
@@ -467,7 +470,7 @@ function Invoke-Guardian {
         }
     }
 
-    # 2. 确保软件组件设备处于禁用状态
+    # 2. Keep software component devices disabled.
     $pnpDevices = Get-PnpDevice -ErrorAction SilentlyContinue | Where-Object {
         $matched = $false
         $hwList = $_.HardwareID
@@ -484,7 +487,7 @@ function Invoke-Guardian {
         Disable-PnpDevice -InstanceId $dev.InstanceId -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
     }
 
-    # 3. 确保 DenyDeviceIDs 策略处于激活状态
+    # 3. Keep the DenyDeviceIDs policy active.
     $restrPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
     if (Test-Path $restrPath) {
         $denyVal = (Get-ItemProperty $restrPath -Name 'DenyDeviceIDs' -ErrorAction SilentlyContinue).DenyDeviceIDs
@@ -496,24 +499,24 @@ function Invoke-Guardian {
 }
 
 # -------------------------------------------------------------
-# 卸载逻辑: 还原系统配置
+# Uninstall logic: restore system configuration.
 # -------------------------------------------------------------
 function Invoke-Uninstall {
     Assert-Elevated
     Write-Host "==========================================================" -ForegroundColor Green
-    Write-Host " 开始还原惠普遥测配置与策略 (卸载过程)" -ForegroundColor Green
+    Write-Host " Restoring HP telemetry configuration and policies (uninstall)" -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
 
-    # 1. 删除守卫任务
-    Write-Host "[1/5] 删除系统持久化守卫计划任务..." -ForegroundColor Yellow
+    # 1. Delete the guardian task.
+    Write-Host "[1/5] Deleting the persistent guardian scheduled task..." -ForegroundColor Yellow
     try {
         & schtasks.exe /delete /tn "$GuardianTaskPath$GuardianTaskName" /f | Out-Null
-        Write-Host "      守卫任务已移除。" -ForegroundColor Gray
+        Write-Host "      Guardian task removed." -ForegroundColor Gray
     } catch {
-        Write-Host "      未发现守卫任务或已被删除。" -ForegroundColor Gray
+        Write-Host "      Guardian task was not found or was already deleted." -ForegroundColor Gray
     }
 
-    # 2. 读取备份文件
+    # 2. Read the backup file.
     $backup = $null
     if (Test-Path $BackupFile) {
         try {
@@ -523,8 +526,8 @@ function Invoke-Uninstall {
         }
     }
 
-    # 3. 还原 DeviceInstall 限制策略
-    Write-Host "[2/5] 还原设备安装限制策略 (DenyDeviceIDs)..." -ForegroundColor Yellow
+    # 3. Restore DeviceInstall restrictions.
+    Write-Host "[2/5] Restoring DeviceInstall restrictions (DenyDeviceIDs)..." -ForegroundColor Yellow
     $denySubPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions\DenyDeviceIDs"
     $restrPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
 
@@ -535,7 +538,7 @@ function Invoke-Uninstall {
                 Remove-ItemProperty -Path $denySubPath -Name $p.Name -ErrorAction SilentlyContinue | Out-Null
             }
         }
-        # 检查是否还有剩余条目
+        # Check whether any entries remain.
         $remaining = (Get-ItemProperty $denySubPath).PSObject.Properties | Where-Object { $_.Name -notmatch '^PS' }
         if (-not $remaining -or $remaining.Count -eq 0) {
             Remove-Item -Path $denySubPath -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
@@ -551,21 +554,21 @@ function Invoke-Uninstall {
         }
     }
 
-    # 4. 还原服务启动类型
-    Write-Host "[3/5] 还原受影响服务的启动类型..." -ForegroundColor Yellow
+    # 4. Restore service startup types.
+    Write-Host "[3/5] Restoring startup types for affected services..." -ForegroundColor Yellow
     if ($backup -and $backup.Services) {
         foreach ($svcName in $backup.Services.Keys) {
             $origType = $backup.Services[$svcName]
             $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
             if ($svc -and $origType -and $origType -ne 'Disabled') {
-                Write-Host "      还原服务 $svcName -> $origType" -ForegroundColor Gray
+                Write-Host "      Restoring service $svcName -> $origType" -ForegroundColor Gray
                 Set-Service -Name $svcName -StartupType $origType -ErrorAction SilentlyContinue
             }
         }
     }
 
-    # 5. 重新启用 PnP 软件组件设备
-    Write-Host "[4/5] 重新启用软件组件设备..." -ForegroundColor Yellow
+    # 5. Re-enable PnP software component devices.
+    Write-Host "[4/5] Re-enabling software component devices..." -ForegroundColor Yellow
     $pnpDevices = Get-PnpDevice -ErrorAction SilentlyContinue | Where-Object {
         $matched = $false
         $hwList = $_.HardwareID
@@ -579,38 +582,38 @@ function Invoke-Uninstall {
         return ($matched -and $_.Status -ne 'OK')
     }
     foreach ($dev in $pnpDevices) {
-        Write-Host "      启用设备: $($dev.FriendlyName)" -ForegroundColor Gray
+        Write-Host "      Enabling device: $($dev.FriendlyName)" -ForegroundColor Gray
         Enable-PnpDevice -InstanceId $dev.InstanceId -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
     }
 
-    # 6. 清理 hosts 规则
-    Write-Host "[5/5] 清理 hosts 文件中的域名屏蔽规则..." -ForegroundColor Yellow
+    # 6. Remove hosts file rules.
+    Write-Host "[5/5] Removing hostname blocks from the hosts file..." -ForegroundColor Yellow
     if (Test-Path $HostsPath) {
         $content = Get-Content -Path $HostsPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
         if ($content -match '(?ms)# \[Scoop:disable-hp-telemetry start\].*?# \[Scoop:disable-hp-telemetry end\]\r?\n?') {
             $cleaned = $content -replace '(?ms)\r?\n?# \[Scoop:disable-hp-telemetry start\].*?# \[Scoop:disable-hp-telemetry end\]\r?\n?', "`r`n"
             Set-Content -Path $HostsPath -Value $cleaned.Trim() -Encoding UTF8 -Force
-            Write-Host "      hosts 规则已移除。" -ForegroundColor Gray
+            Write-Host "      hosts rules removed." -ForegroundColor Gray
         }
     }
 
-    # 清理备份文件
+    # Remove the backup file.
     if (Test-Path $BackupFile) {
         Remove-Item -Path $BackupFile -Force -ErrorAction SilentlyContinue
     }
 
-    Write-Host "`n惠普遥测配置与安装策略已成功还原！" -ForegroundColor Green
+    Write-Host "`nHP telemetry configuration and installation policies were restored successfully." -ForegroundColor Green
 }
 
 # -------------------------------------------------------------
-# 查询状态例程
+# Status query routine.
 # -------------------------------------------------------------
 function Invoke-Status {
     Write-Host "==========================================================" -ForegroundColor Cyan
-    Write-Host " 惠普遥测与 Windows Update 阻断状态检查" -ForegroundColor Cyan
+    Write-Host " HP telemetry and Windows Update blocking status" -ForegroundColor Cyan
     Write-Host "==========================================================" -ForegroundColor Cyan
 
-    # 1. 检查设备阻止策略
+    # 1. Check the device blocking policy.
     $restrPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
     $denySubPath = "$restrPath\DenyDeviceIDs"
     $denyActive = $false
@@ -628,20 +631,20 @@ function Invoke-Status {
     }
 
     if ($denyActive) {
-        Write-Host "[√] 硬件安装阻止策略 (DenyDeviceIDs): 已生效 (已阻止 $blockedCount 个遥测组件ID)" -ForegroundColor Green
+        Write-Host "[OK] Hardware installation blocking policy (DenyDeviceIDs): active ($blockedCount telemetry component IDs blocked)" -ForegroundColor Green
     } else {
-        Write-Host "[X] 硬件安装阻止策略 (DenyDeviceIDs): 未生效" -ForegroundColor Red
+        Write-Host "[X] Hardware installation blocking policy (DenyDeviceIDs): inactive" -ForegroundColor Red
     }
 
-    # 2. 检查守护任务
+    # 2. Check the guardian task.
     $task = Get-ScheduledTask -TaskPath $GuardianTaskPath -TaskName $GuardianTaskName -ErrorAction SilentlyContinue
     if ($task) {
-        Write-Host "[√] 持久化守卫计划任务: 已就绪 (状态: $($task.State))" -ForegroundColor Green
+        Write-Host "[OK] Persistent guardian scheduled task: ready (state: $($task.State))" -ForegroundColor Green
     } else {
-        Write-Host "[X] 持久化守卫计划任务: 未注册" -ForegroundColor Yellow
+        Write-Host "[X] Persistent guardian scheduled task: not registered" -ForegroundColor Yellow
     }
 
-    # 3. 检查 hosts
+    # 3. Check the hosts file.
     $hostsBlocked = $false
     if (Test-Path $HostsPath) {
         $content = Get-Content -Path $HostsPath -Raw -ErrorAction SilentlyContinue
@@ -650,28 +653,28 @@ function Invoke-Status {
         }
     }
     if ($hostsBlocked) {
-        Write-Host "[√] 域名屏蔽 (hosts): 已生效" -ForegroundColor Green
+        Write-Host "[OK] Hostname blocking (hosts): active" -ForegroundColor Green
     } else {
-        Write-Host "[X] 域名屏蔽 (hosts): 未生效" -ForegroundColor Yellow
+        Write-Host "[X] Hostname blocking (hosts): inactive" -ForegroundColor Yellow
     }
 
-    # 4. 检查服务状态
-    Write-Host "`n--- 目标遥测服务列表 ---" -ForegroundColor Cyan
+    # 4. Check service status.
+    Write-Host "`n--- Target telemetry services ---" -ForegroundColor Cyan
     $foundSvcs = 0
     foreach ($svcName in $TargetServiceNames) {
         $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
         if ($svc) {
             $foundSvcs++
             $color = if ($svc.StartType -eq 'Disabled' -and $svc.Status -ne 'Running') { 'Green' } else { 'Red' }
-            Write-Host "  * $($svc.Name) [$($svc.DisplayName)] -> 状态: $($svc.Status), 启动类型: $($svc.StartType)" -ForegroundColor $color
+            Write-Host "  * $($svc.Name) [$($svc.DisplayName)] -> status: $($svc.Status), startup type: $($svc.StartType)" -ForegroundColor $color
         }
     }
     if ($foundSvcs -eq 0) {
-        Write-Host "  (系统中未安装任何匹配的目标服务)" -ForegroundColor Gray
+        Write-Host "  (No matching target services are installed.)" -ForegroundColor Gray
     }
 
-    # 5. 检查 PnP 软件组件设备
-    Write-Host "`n--- 目标 PnP 软件组件设备 ---" -ForegroundColor Cyan
+    # 5. Check PnP software component devices.
+    Write-Host "`n--- Target PnP software component devices ---" -ForegroundColor Cyan
     $pnpDevices = Get-PnpDevice -ErrorAction SilentlyContinue | Where-Object {
         $matched = $false
         $hwList = $_.HardwareID
@@ -687,17 +690,17 @@ function Invoke-Status {
     if ($pnpDevices) {
         foreach ($dev in $pnpDevices) {
             $color = if ($dev.Status -eq 'OK') { 'Red' } else { 'Green' }
-            Write-Host "  * $($dev.FriendlyName) [$($dev.InstanceId)] -> 状态: $($dev.Status)" -ForegroundColor $color
+            Write-Host "  * $($dev.FriendlyName) [$($dev.InstanceId)] -> status: $($dev.Status)" -ForegroundColor $color
         }
     } else {
-        Write-Host "  (系统中未发现匹配的遥测软件组件设备)" -ForegroundColor Gray
+        Write-Host "  (No matching telemetry software component devices were found.)" -ForegroundColor Gray
     }
 
     Write-Host "==========================================================" -ForegroundColor Cyan
 }
 
 # -------------------------------------------------------------
-# 分发入口
+# Dispatch entry point.
 # -------------------------------------------------------------
 if ($Install) {
     Invoke-Install

@@ -1,10 +1,10 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "禁用惠普笔记本遥测驱动与后台服务，并阻止Windows更新自动重新下载安装",
     "homepage": "https://github.com/Initsnow/MyScoopBucket",
     "license": "MIT",
     "url": "https://raw.githubusercontent.com/Initsnow/MyScoopBucket/master/scripts/disable-hp-telemetry.ps1",
-    "hash": "ef9fa2c539a605adb557392ee531c61ca0db560748a2f22b4b04a567591f0815",
+    "hash": "3d0d5e97cf5f09cf9c6a6f88b0ebe65e200f119e86e0286e2f3c2ca9fd536de5",
     "bin": [
         [
             "disable-hp-telemetry.ps1",
