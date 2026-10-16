@@ -1,10 +1,10 @@
 {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "Flashy Synthesia Like Software For Linux,Windows and MacOs",
     "homepage": "https://github.com/PolyMeilex/Neothesia",
     "license": "GPL-3.0",
-    "url": "https://github.com/PolyMeilex/Neothesia/releases/download/v0.5.0/neothesia.exe",
-    "hash": "10077d21d0b6d908c794276a41af4e29d42c75c9cb3fb923e4a47126a5176c16",
+    "url": "https://github.com/PolyMeilex/Neothesia/releases/download/v0.5.1/neothesia.exe",
+    "hash": "bba78bb63323a7902d374fd78ce10e0bfaba868a518b197f35eb69748d382382",
     "bin": "neothesia.exe",
     "shortcuts": [
         [
