@@ -1,0 +1,34 @@
+{
+    "version": "0.1.0",
+    "description": "A lightweight AI desktop companion powered by Live2D and Rust",
+    "homepage": "https://github.com/Initsnow/murasame",
+    "license": "GPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Initsnow/murasame/releases/download/v0.1.0/murasame-v0.1.0-windows-x64.zip",
+            "hash": "29de883163fe98277ffa2667b1cbe9c9a2edd1845dd10dd1e550776b0affa592"
+        }
+    },
+    "extract_dir": "murasame-v0.1.0-windows-x64",
+    "bin": "murasame.exe",
+    "shortcuts": [
+        [
+            "murasame.exe",
+            "Murasame"
+        ]
+    ],
+    "persist": [
+        "config.toml",
+        "characters",
+        "assets/user_avatar.png"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Initsnow/murasame/releases/download/v$version/murasame-v$version-windows-x64.zip"
+            }
+        },
+        "extract_dir": "murasame-v$version-windows-x64"
+    }
+}
